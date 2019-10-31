@@ -11,7 +11,7 @@ document.getElementById("btn_scan").onclick = function() {
       console.log(err);
       return
     }
-    console.log("Initialization finished. Ready to start");
+    alert("Initialization finished. Ready to start");
     Quagga.start();
   });
 };
