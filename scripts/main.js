@@ -1,3 +1,4 @@
+/*
 document.getElementById("btn_scan").onclick = function() {
   console.log("btn_scan clicked");
   Quagga.init({
@@ -25,3 +26,15 @@ document.getElementById("btn_scan").onclick = function() {
     });
   });
 };
+*/
+
+$(function() {
+  var liveStreamConfig = {
+    inputStream: {
+      type: "LiveStream"
+    },
+    locator: {
+      
+    }
+  }
+});
