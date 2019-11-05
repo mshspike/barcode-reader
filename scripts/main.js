@@ -6,6 +6,9 @@ document.getElementById("btn_scan").onclick = function() {
       type: "LiveStream",
       target: document.querySelector('#barcode')
     },
+    decoder: {
+      readers: ['"code_128_reader']
+    }
   }, function(err) {
     if (err) {
       console.log(err);
@@ -15,7 +18,10 @@ document.getElementById("btn_scan").onclick = function() {
     Quagga.start();
 
     Quagga.onDetected(function(data) {
-      alert(data.codeResult.code);
+      if (SpeechRecognitionResult.codeResult.code) {
+        alert(result.codeResult.code);
+        Quagga.stop();
+      }
     });
   });
 };
