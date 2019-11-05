@@ -1,113 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title></title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        /* In order to place the tracking correctly */
-        canvas.drawing, canvas.drawingBuffer {
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
-
 <body>
-  <!-- Div to show the scanner -->
-  <div id="scanner-container"></div>
+
+  <div class="container">
+    <label for="">Barcode</label>
+    <div class="form-row">
+      <div class="form-group col-md-10">
+        <input id="input_barcode" type="text" class="form-control" placeholder="Barcode">
+      </div>
+      <div class="form-group col-md-2">
+        <button type="button" class="btn btn-primary" style="width:100%;">Scan</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="">Product</label>
+      <input id="input_product" type="text" class="form-control" placeholder="Product Name">
+    </div>
+    <div class="form-group">
+      <label for="">Price</label>
+      <input id="unput_price" type="text" class="form-control" placeholder="Price">
+    </div>
+  </div>
   
-  <input type="button" id="btn" value="Start/Stop the scanner" />
-
-  <!-- Include the image-diff library -->
-  <script src="quagga.min.js"></script>
-
-  <script>
-    var _scannerIsRunning = false;
-
-    function startScanner() {
-      Quagga.init({
-        inputStream: {
-          name: "Live",
-          type: "LiveStream",
-          target: document.querySelector('#scanner-container'),
-          constraints: {
-            width: 480,
-            height: 320,
-            facingMode: "environment"
-          },
-        },
-        decoder: {
-          readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader"],
-          debug: {
-            showCanvas: true,
-            showPatches: true,
-            showFoundPatches: true,
-            showSkeleton: true,
-            showLabels: true,
-            showPatchLabels: true,
-            showRemainingPatchLabels: true,
-            boxFromPatches: {
-              showTransformed: true,
-              showTransformedBox: true,
-              showBB: true
-            }
-          }
-        },
-      }, function (err) {
-        if (err) {
-          console.log(err);
-          return
-        }
-        console.log("Initialization finished. Ready to start");
-        Quagga.start();
-        // Set flag to is running
-        _scannerIsRunning = true;
-      });
-
-
-      Quagga.onProcessed(function (result) {
-        var drawingCtx = Quagga.canvas.ctx.overlay,
-        drawingCanvas = Quagga.canvas.dom.overlay;
-
-        if (result) {
-          if (result.boxes) {
-            drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
-            result.boxes.filter(function (box) {
-              return box !== result.box;
-            }).forEach(function (box) {
-              Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: "green", lineWidth: 2 });
-            });
-          }
-
-          if (result.box) {
-            Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: "#00F", lineWidth: 2 });
-          }
-
-          if (result.codeResult && result.codeResult.code) {
-            Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: 'red', lineWidth: 3 });
-          }
-        }
-      });
-
-
-      Quagga.onDetected(function (result) {
-          console.log("Barcode detected and processed : [" + result.codeResult.code + "]", result);
-      });
-    }
-
-
-    // Start/stop scanner
-    document.getElementById("btn").addEventListener("click", function () {
-      if (_scannerIsRunning) {
-        Quagga.stop();
-      } else {
-        startScanner();
-      }
-    }, false);
-  </script>
 </body>
-
 </html>
